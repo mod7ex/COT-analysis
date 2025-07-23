@@ -4,8 +4,6 @@ import requests, zipfile, io
 from datetime import date
 from bs4 import BeautifulSoup
 
-EXTRACT_PATH = 'data'
-
 # COT report types:  
 #   "legacy_fut" as report type argument selects the Legacy futures only report,
 #   "legacy_futopt" the Legacy futures and options report,
@@ -15,24 +13,30 @@ EXTRACT_PATH = 'data'
 #   "traders_in_financial_futures_fut" the Traders in Financial Futures futures only report, and 
 #   "traders_in_financial_futures_fut" the Traders in Financial Futures futures and options report. 
 
+EXTRACTION_FOLDER_NAME = 'data'
+PLOTS_FOLDER_NAME = 'plots'
+
+EXTRACTION_FOLDER_PATH = os.path.join(os.getcwd(), EXTRACTION_FOLDER_NAME)
+PLOTS_FOLDER_PATH = os.path.join(os.getcwd(), PLOTS_FOLDER_NAME)
+
+os.makedirs(PLOTS_FOLDER_PATH, exist_ok=True)
+
 def load_data(_url, _store, _verbose):
-   os.makedirs(EXTRACT_PATH, exist_ok=True)
+   os.makedirs(EXTRACTION_FOLDER_NAME, exist_ok=True)
 
    _req = requests.get(_url)
    z = zipfile.ZipFile(io.BytesIO(_req.content))
-   z.extractall(path=os.path.join(os.getcwd(), EXTRACT_PATH))
-
-   # print("Extracted files:", z.namelist())
-
+   z.extractall(path=EXTRACTION_FOLDER_PATH)
    _file_name = z.namelist()[0]
-   _file_path = os.path.join(EXTRACT_PATH, _file_name)
-   
+   _file_path = os.path.join(EXTRACTION_FOLDER_NAME, _file_name)
    df = pd.read_csv(_file_path, low_memory=False)
 
    if _store:
-      if _verbose: print(f"Stored the extracted file {_file_name} in the directory {EXTRACT_PATH}")
+      if _verbose:
+         print(f"Downloaded & Stored the extracted file {_file_name} in the directory {EXTRACTION_FOLDER_NAME}")
    else:
       os.remove(_file_path)
+
    return df
 
 def cot_hist(cot_report_type = "legacy_fut", store_txt=True, verbose=True):
@@ -118,16 +122,32 @@ def cot_year(year = 2020, cot_report_type = "legacy_fut", store_txt=True, verbos
                "traders_in_financial_futures_fut" or
                "traders_in_financial_futures_futopt" """)
 
-   if verbose: print("Downloading single year data from:", year)
+   if verbose: print("Loading single year data from:", year)
    return load_data("https://cftc.gov/files/dea/history/" + rep + str(year) + ".zip", store_txt, verbose)
 
+def cot_all(cot_report_type="legacy_fut", store_txt=True, verbose=True, store = True): 
+   _cache_file_name = f"{cot_report_type}.csv"
+   _cache_file_path = os.path.join(EXTRACTION_FOLDER_PATH, _cache_file_name)
 
-def cot_all(cot_report_type="legacy_fut", store_txt=True, verbose=True): 
-    df = cot_hist(cot_report_type, store_txt=store_txt, verbose=verbose)
-    for i in range(2017, date.today().year+1):
-        years = pd.DataFrame(cot_year(i, cot_report_type, store_txt=store_txt, verbose=verbose))
-        df = pd.concat([df, years])
-    return df
+   if os.path.isdir(EXTRACTION_FOLDER_PATH):
+      if _cache_file_name in os.listdir(EXTRACTION_FOLDER_PATH):
+         if not store: os.remove(_cache_file_path)
+         else:
+            if verbose: print(f"used cached file {cot_report_type}.csv under the directory: {EXTRACTION_FOLDER_PATH}")
+            df = pd.read_csv(_cache_file_path, low_memory=False)
+            return df
+
+   df = pd.concat([
+      # Get historical data till 2016 (included)  
+      cot_hist(cot_report_type, store_txt=store_txt, verbose=verbose),
+      pd.concat([cot_year(i, cot_report_type, store_txt=store_txt, verbose=verbose) for i in range(2017, date.today().year+1)])
+   ])
+
+   if store:
+      df.to_csv(_cache_file_path, index=False)
+      if verbose: print(f"data cached in the file {cot_report_type}.csv under the directory: {EXTRACTION_FOLDER_PATH}")
+
+   return df
 
 def cot_all_reports(store_txt=True, verbose=True):   
   l = ["legacy_fut", "legacy_futopt", "supplemental_futopt", "disaggregated_fut", "disaggregated_futopt", "traders_in_financial_futures_fut", "traders_in_financial_futures_futopt"]
