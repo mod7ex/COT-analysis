@@ -9,6 +9,7 @@ df = cot_all()
 _ASSET_CODE = '088691'
 _STARTING_DATE = '2020'
 _PLOT_FILE_NAME = 'quick_analysis'
+_WINDOW = 52 # Rolling window for the last N weeks
 # -----------------------------------------------------------------------------------------------------------------
 
 # Inputs -----------------------------------------------------------------------------------------------------------------
@@ -17,6 +18,9 @@ ASSET_CODE = asset_code_input if asset_code_input else _ASSET_CODE
 
 starting_date_input = input(f"Enter the starting date (default: {_STARTING_DATE}) [press ENTER to ignore]: ")
 STARTING_DATE = starting_date_input if starting_date_input else _STARTING_DATE
+
+window_input = input(f"Enter the window <int> (default: {_WINDOW} weeks) [press ENTER to ignore]: ")
+WINDOW = int(window_input) if window_input else _WINDOW
 
 plot_file_name_input = input(f"Enter plot file name (default: {_PLOT_FILE_NAME}) [press ENTER to ignore]: ")
 PLOT_FILE_NAME = plot_file_name_input if plot_file_name_input else _PLOT_FILE_NAME
@@ -43,10 +47,9 @@ df['Small_Traders_Net_Position'] = df['Nonreportable Positions-Long (All)'] - df
 print("[->] Calculated net positions for Commercials, Large Speculators, and Small Traders.")
 
 # Calculate COT Index for Commercials
-window = 26 # Rolling window for the last N weeks
 
-df['Max_Net_Position_Last_N'] = df['Commercial_Net_Position'].rolling(window=window).max()
-df['Min_Net_Position_Last_N'] = df['Commercial_Net_Position'].rolling(window=window).min()
+df['Max_Net_Position_Last_N'] = df['Commercial_Net_Position'].rolling(window=WINDOW).max()
+df['Min_Net_Position_Last_N'] = df['Commercial_Net_Position'].rolling(window=WINDOW).min()
 
 df.dropna(inplace=True)
 
@@ -64,7 +67,7 @@ df = df[df.index > STARTING_DATE]  # Filter by starting date if needed
 print("[->] Preparing data for plotting...")
 
 # Create subplots: 1 column, 3 rows, shared X-axis
-fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing= 0.1, subplot_titles=('COT Index', 'Net positions', 'OI'))
+fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing= 0.1, subplot_titles=(f"COT index ({WINDOW} weeks)", 'Net positions', 'OI'))
 
 # Add each series to its own subplot
 fig.add_trace(go.Scatter(x=df.index, y=df['COT_Index'], name='COT Index'), row=1, col=1)
