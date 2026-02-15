@@ -1,0 +1,7 @@
+venv
+.venv
+/data
+/plots
+/**/__pycache__
+/**/*.txt
+.idea

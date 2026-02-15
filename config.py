@@ -1,0 +1,18 @@
+import os
+from utils import TRADERS_IN_FINANCIAL_FUTURES_FUT
+
+PLOTS_FOLDER_NAME = 'plots'
+
+DATA_EXTRACTION_FOLDER_NAME = 'data'
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+DATA_EXTRACTION_FOLDER_PATH = os.path.join(ROOT, DATA_EXTRACTION_FOLDER_NAME)
+
+PLOTS_FOLDER_PATH = os.path.join(ROOT, PLOTS_FOLDER_NAME)
+
+TFF_MARKETS_CSV_PATH = os.path.join(DATA_EXTRACTION_FOLDER_PATH, f"{TRADERS_IN_FINANCIAL_FUTURES_FUT} - markets.csv")
+
+TFF_MARKETS_JSON_PATH = os.path.join(ROOT, 'json', f"{TRADERS_IN_FINANCIAL_FUTURES_FUT}-markets.json")
+
+PICKED_MARKET = "EURO FX"

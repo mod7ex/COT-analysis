@@ -1,0 +1,79 @@
+{
+    "legacy_fut": {
+        "description": "Legacy Report Futures-only",
+        "hist": {
+            "url_end": "deacot1986_2016",
+            "txt": "FUT86_16.txt"
+        },
+        "year": {
+            "rep": "deacot",
+            "txt": "annual.txt"
+        }
+    },
+    "legacy_futopt": {
+        "description": "Legacy Report Futures-and-Options Combined",
+        "hist": {
+            "url_end": "deahistfo_1995_2016",
+            "txt": "Com95_16.txt"
+        },
+        "year": {
+            "rep": "deahistfo",
+            "txt": "annualof.txt"
+        }
+    },
+    "supplemental_futopt": {
+        "description": "Supplemental Report Futures-and-Options combined (short format)",
+        "hist": {
+            "url_end": "dea_cit_txt_2006_2016",
+            "txt": "CIT06_16.txt"
+        },
+        "year": {
+            "rep": "dea_cit_txt_",
+            "txt": "annualci.txt"
+        }
+    },
+    "disaggregated_fut": {
+        "description": "Disaggregated Report Futures-only",
+        "hist": {
+            "url_end": "fut_disagg_txt_hist_2006_2016",
+            "txt": "F_Disagg06_16.txt"
+        },
+        "year": {
+            "rep": "fut_disagg_txt_",
+            "txt": "f_year.txt"
+        }
+    },
+    "disaggregated_futopt": {
+        "description": "Disaggregated Report Futures-and-Options Combined",
+        "hist": {
+            "url_end": "com_disagg_txt_hist_2006_2016",
+            "txt": "C_Disagg06_16.txt"
+        },
+        "year": {
+            "rep": "com_disagg_txt_",
+            "txt": "c_year.txt"
+        }
+    },
+    "traders_in_financial_futures_fut": {
+        "description": "Traders in Financial Futures (TFF)",
+        "hist": {
+            "url_end": "fin_fut_txt_2006_2016",
+            "txt": "F_TFF_2006_2016.txt"
+        },
+        "year": {
+            "rep": "fut_fin_txt_",
+            "txt": "FinFutYY.txt"
+        }
+    },
+    "traders_in_financial_futures_futopt": {
+        "description": "Traders in Financial Futures (TFF) Futures-and-Options Combined",
+        "hist": {
+            "url_end": "fin_com_txt_2006_2016",
+            "txt": "C_TFF_2006_2016.txt"
+        },
+        "year": {
+            "rep": "com_fin_txt_",
+            "txt": "FinComYY.txt"
+        }
+    }
+}
