@@ -1,4 +1,5 @@
 venv
+json
 .venv
 /data
 /plots

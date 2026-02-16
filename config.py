@@ -1,18 +1,33 @@
 import os
-from utils import TRADERS_IN_FINANCIAL_FUTURES_FUT
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+JSON_FOLDER_NAME = 'json'
 
 PLOTS_FOLDER_NAME = 'plots'
 
 DATA_EXTRACTION_FOLDER_NAME = 'data'
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
+# ----------------------------------------------------------------------------------------------------------------------
 
 DATA_EXTRACTION_FOLDER_PATH = os.path.join(ROOT, DATA_EXTRACTION_FOLDER_NAME)
 
 PLOTS_FOLDER_PATH = os.path.join(ROOT, PLOTS_FOLDER_NAME)
 
-TFF_MARKETS_CSV_PATH = os.path.join(DATA_EXTRACTION_FOLDER_PATH, f"{TRADERS_IN_FINANCIAL_FUTURES_FUT} - markets.csv")
+JSON_FOLDER_PATH = os.path.join(ROOT, JSON_FOLDER_NAME)
 
-TFF_MARKETS_JSON_PATH = os.path.join(ROOT, 'json', f"{TRADERS_IN_FINANCIAL_FUTURES_FUT}-markets.json")
+# ----------------------------------------------------------------------------------------------------------------------
+
+csv_markets_path = lambda market: os.path.join(DATA_EXTRACTION_FOLDER_PATH, f"{market}-markets.csv")
+
+json_markets_path = lambda market: os.path.join(JSON_FOLDER_PATH, f"{market}-markets.json")
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+report_types_cols_path = lambda market: os.path.join(DATA_EXTRACTION_FOLDER_PATH, f"{market}-report_types_cols.txt")
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 PICKED_MARKET = "EURO FX"

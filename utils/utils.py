@@ -1,5 +1,39 @@
 import plotly.express as px
 from pandas import DataFrame
+from .cot import cot_year
+from config import report_types_cols_path
+import json
+from config import csv_markets_path, json_markets_path
+
+def get_markets(cot_report_type, save_csv=False, save_json=False):
+    df = cot_year(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=False)
+
+    df = df[['CFTC_Contract_Market_Code', 'Market_and_Exchange_Names']]
+
+    df.columns = ["Market_Code", "Market_Name"]
+
+    df.drop_duplicates(subset=["Market_Code"], keep="last")
+
+    # Save as csv
+    if save_csv: df.to_csv(csv_markets_path(cot_report_type))
+
+    # Save as json
+    if save_json:
+        with open(json_markets_path(cot_report_type), "w") as f:
+            json.dump(dict(zip(df["Market_Name"], df["Market_Code"])), f, indent=4)
+
+    return df
+
+def get_report_type_cols(cot_report_type, save=False):
+    df = cot_year(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=False)
+    
+    for i, col in enumerate(df.columns, 1):
+        print(f"| {i} | {col} |")
+
+    if save:
+        with open(report_types_cols_path(cot_report_type), "w") as f:
+            for col in df.columns:
+                f.write(col + "\n")
 
 def plot_df_line_chart(
         df = DataFrame(),

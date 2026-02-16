@@ -1,16 +1,15 @@
 from utils.cot import cot_all, TRADERS_IN_FINANCIAL_FUTURES_FUT
-import os
 import pandas as pd
 import json
-from config import ROOT, PICKED_MARKET, TFF_MARKETS_JSON_PATH
+from config import PICKED_MARKET, json_markets_path
 
-def get_df(cot_report_type=TRADERS_IN_FINANCIAL_FUTURES_FUT):
+def get_market_df(cot_report_type=TRADERS_IN_FINANCIAL_FUTURES_FUT, market=PICKED_MARKET):
     df = cot_all(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=True)
 
-    with open(TFF_MARKETS_JSON_PATH, "r") as f:
+    with open(json_markets_path(cot_report_type), "r") as f:
         _markets = json.load(f)
 
-    _filter = df['CFTC_Contract_Market_Code'] == _markets[PICKED_MARKET]
+    _filter = df['CFTC_Contract_Market_Code'] == _markets[market]
 
     df = df[_filter]
 

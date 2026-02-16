@@ -16,7 +16,7 @@ DISAGGREGATED_FUTOPT = 'disaggregated_futopt'
 TRADERS_IN_FINANCIAL_FUTURES_FUT = 'traders_in_financial_futures_fut'
 TRADERS_IN_FINANCIAL_FUTURES_FUTOPT = 'traders_in_financial_futures_futopt'
 
-with open(os.path.join(ROOT, "json", "cot.json"), "r") as f:
+with open(os.path.join(ROOT, "utils", "cot.json"), "r") as f:
    REPORT_TYPES = json.load(f)
 
 # --------------------------------------------------------------------------------------------------------------------
