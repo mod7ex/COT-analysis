@@ -1,28 +1,46 @@
-import plotly.express as px
-from pandas import DataFrame
-from .cot import cot_year
-from config import report_types_cols_path
 import json
+from .cot import cot_year
+from pandas import DataFrame
+import plotly.express as px
+from config import report_types_cols_path
 from config import csv_markets_path, json_markets_path
 
+def normalize_cols(df):
+    df.columns = (
+        df.columns
+        .str.strip()
+        .str.lower()
+        .str.replace(r"[^\w]+", "_", regex=True)
+    )
+    return df
+
 def get_markets(cot_report_type, save_csv=False, save_json=False):
-    df = cot_year(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=False)
+    # Normalize column names
+    df = normalize_cols(cot_year(
+        cot_report_type=cot_report_type,
+        verbose=True,
+        _use_cache=True,
+        _store=False
+    ))
 
-    df = df[['CFTC_Contract_Market_Code', 'Market_and_Exchange_Names']]
+    # Now we use standardized column names
+    df = df[['cftc_contract_market_code', 'market_and_exchange_names']]
 
-    df.columns = ["Market_Code", "Market_Name"]
+    df.columns = ["market_code", "market_name"]
 
-    df.drop_duplicates(subset=["Market_Code"], keep="last")
+    df['market_name'] = df['market_name'].str.split(' - ').str[0]
 
-    # Save as csv
-    if save_csv: df.to_csv(csv_markets_path(cot_report_type))
+    df.drop_duplicates(subset=["market_code"], keep="last", inplace=True)
 
-    # Save as json
+    if save_csv:
+        df.to_csv(csv_markets_path(cot_report_type), index=False)
+
     if save_json:
         with open(json_markets_path(cot_report_type), "w") as f:
-            json.dump(dict(zip(df["Market_Name"], df["Market_Code"])), f, indent=4)
+            json.dump(dict(zip(df["market_name"], df["market_code"])), f, indent=4)
 
     return df
+
 
 def get_report_type_cols(cot_report_type, save=False):
     df = cot_year(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=False)
