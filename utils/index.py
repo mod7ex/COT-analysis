@@ -5,13 +5,21 @@ import plotly.express as px
 from config import report_types_cols_path
 from config import csv_markets_path, json_markets_path
 
-def normalize_cols(df):
-    df.columns = (
-        df.columns
-        .str.strip()
-        .str.lower()
-        .str.replace(r"[^\w]+", "_", regex=True)
+def normalize_col(col: str):
+    return (
+        col
+        .strip()
+        .lower()
+        .replace("-", "_")
+        .replace("--", "_")
+        .replace("__", "_")
+        .replace(" ", "_")
+        .replace("(", "")
+        .replace(")", "")
     )
+
+def normalize_cols(df):
+    df.columns = [normalize_col(col.strip()) for col in df.columns]
     return df
 
 def get_markets(cot_report_type, save_csv=False, save_json=False):
