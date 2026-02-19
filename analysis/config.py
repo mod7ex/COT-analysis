@@ -1,20 +1,24 @@
 import pandas as pd
+import json
 
 # --------------------------------------------------------------------------------------------------------------------------------------------
 
-def get_market_participants(df_market):
+def get_market_participants(df_market, dump=False):
+
     participants = {}
 
     for col in df_market.columns:
         if "positions" not in col or "all" not in col: continue
 
-        # detect long/short
-        if "long" in col: side = "long"
-        elif "short" in col: side = "short"
-        elif "spread" in col: side = "spread"
-        else: continue
+        if "long" in col:
+            side = "long"
+        elif "short" in col:
+            side = "short"
+        elif "spread" in col:
+            side = "spread"
+        else:
+            continue
 
-        # extract participant name (everything before "positions")
         participant = col.split("_positions")[0]
 
         if participant not in participants: participants[participant] = {}
@@ -24,15 +28,36 @@ def get_market_participants(df_market):
     for col in df_market.columns:
         if "_oi_" not in col or 'all' not in col: continue
 
-        # detect long/short
-        if "long" in col: side = "long_oi"
-        elif "short" in col: side = "short_oi"
-        elif "spread" in col: side = "spread_oi"
-        else: continue
+        if "long" in col:
+            side = "long_oi"
+        elif "short" in col:
+            side = "short_oi"
+        elif "spread" in col:
+            side = "spread_oi"
+        else:
+            continue
 
         for participant in participants.keys():
             if participant in col:
                 participants[participant][side] = col
+
+    for col in df_market.columns:
+        if "change_in" not in col or 'all' not in col: continue
+
+        if "long" in col:
+            side = "long_change"
+        elif "short" in col:
+            side = "short_change"
+        elif "spread" in col:
+            side = "spread_change"
+        else:
+            continue
+
+        for participant in participants.keys():
+            if participant in col:
+                participants[participant][side] = col
+
+    dump and print(json.dumps(participants, indent=4))
 
     return participants
 
