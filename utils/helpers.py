@@ -1,9 +1,21 @@
+import os
 import json
-from .cot import cot_year
-from pandas import DataFrame
+import pandas as pd
 import plotly.express as px
-from config import report_types_cols_path
-from config import csv_markets_path, json_markets_path
+from .constants import DATA_EXTRACTION_FOLDER_PATH, JSON_FOLDER_PATH, PICKED_MARKET, TRADERS_IN_FINANCIAL_FUTURES_FUT
+from .cot import cot_all, cot_year
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+csv_markets_path = lambda report_type: os.path.join(DATA_EXTRACTION_FOLDER_PATH, f"{report_type}-markets.csv")
+
+json_markets_path = lambda report_type: os.path.join(JSON_FOLDER_PATH, f"{report_type}-markets.json")
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+report_types_cols_path = lambda report_type: os.path.join(DATA_EXTRACTION_FOLDER_PATH, f"{report_type}-report_types_cols.txt")
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 def normalize_col(col: str):
     return (
@@ -49,7 +61,6 @@ def get_markets(cot_report_type, save_csv=False, save_json=False):
 
     return df
 
-
 def get_report_type_cols(cot_report_type, save=False):
     df = cot_year(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=False)
     
@@ -62,7 +73,7 @@ def get_report_type_cols(cot_report_type, save=False):
                 f.write(col + "\n")
 
 def plot_df_line_chart(
-        df = DataFrame(),
+        df = pd.DataFrame(),
         chart_title: str = "Chart Title",
         draw = True,
         save_to_html = False,
@@ -114,3 +125,40 @@ def plot_df_line_chart(
 
     if draw: return fig.show()
     else: return fig
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+def get_market_df(cot_report_type=TRADERS_IN_FINANCIAL_FUTURES_FUT, market=PICKED_MARKET):
+
+    df = normalize_cols(cot_all(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=True))
+
+    with open(json_markets_path(cot_report_type), "r") as f:
+        _markets = json.load(f)
+
+    df = df[df['cftc_contract_market_code'] == _markets[market]]
+
+    _sig = len(df)
+
+    # 🔎 Auto-detect date column
+    date_cols = [col for col in df.columns if 'date' in col]
+
+    if not date_cols: raise ValueError("No date column found in dataframe.")
+
+    # take the last matching column
+    df.set_index(date_cols[-1], inplace=True)
+
+    df.index = pd.to_datetime(
+        df.index,
+        errors="coerce",
+        format="mixed"
+    )
+
+    # drop rows where date parsing failed
+    # df = df[~df.index.isna()]
+
+    df.sort_index(inplace=True)
+    df.index.name = "Date"
+
+    if _sig != len(df): print(f"records were dropped during the date parsing step. Original: {_sig}, after parsing: {len(df)}")
+
+    return df
