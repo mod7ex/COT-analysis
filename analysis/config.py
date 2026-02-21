@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import random
 
 # --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -21,7 +22,9 @@ def get_market_participants(df_market, dump=False):
 
         participant = col.split("_positions")[0]
 
-        if participant not in participants: participants[participant] = {}
+        if participant not in participants: participants[participant] = {
+            "oi_all": "open_interest_all"
+        }
 
         participants[participant][side] = col
 
@@ -111,15 +114,17 @@ def get_market_cotIndex(market_df, window = 52):
 def get_market_oi(df):
     df_oi = pd.DataFrame({})
 
-    df_oi['oi'] = df['open_interest_all']
-
     participants = get_market_participants(df)
 
+    _random_participant = random.choice(list(participants.keys()))
+
+    df_oi['OI'] = df[participants[_random_participant]['oi_all']]
+
     for participant, side in participants.items():
-        df_oi[oi_participant_col(participant, 'long')] = df_oi['oi'] * df[side['long_oi']] / 100
-        df_oi[oi_participant_col(participant, 'short')] = df_oi['oi'] * df[side['short_oi']] / 100
+        df_oi[oi_participant_col(participant, 'long')] = df_oi['OI'] * df[side['long_oi']] / 100
+        df_oi[oi_participant_col(participant, 'short')] = df_oi['OI'] * df[side['short_oi']] / 100
         if 'spread' in side:
-            df_oi[oi_participant_col(participant, 'spread')] = df_oi['oi'] * df[side['spread_oi']] / 100
+            df_oi[oi_participant_col(participant, 'spread')] = df_oi['OI'] * df[side['spread_oi']] / 100
 
     return df_oi
 
