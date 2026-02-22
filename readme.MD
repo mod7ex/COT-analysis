@@ -1,8 +1,5 @@
 ## COT data analysis
 
-<!-- TODO: Make a percentage short/long chart -->
-<!-- TODO: something like https://cot-reports.com -->
-
 ### COT report types: 
 | report        | 'cot_report_type'|
 | ------------- |-------------| 
@@ -13,3 +10,10 @@
 | Disaggregated Report Futures-and-Options Combined | 'disaggregated_futopt'|
 | Traders in Financial Futures (TFF) | 'traders_in_financial_futures_fut'| 
 | Traders in Financial Futures (TFF) Futures-and-Options Combined | 'traders_in_financial_futures_futopt'| 
+
+<!--
+    TODO!
+        > use OOP
+        > filter by participant in charts
+        > filter by date in data loaders
+-->
