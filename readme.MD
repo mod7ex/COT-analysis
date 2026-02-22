@@ -14,6 +14,5 @@
 <!--
     TODO!
         > use OOP
-        > filter by participant in charts
         > filter by date in data loaders
 -->

@@ -30,7 +30,3 @@ $$
 $$
 
 ---
-
-### Indicator
-
-**Larry Williams COT Index (3 years)**
