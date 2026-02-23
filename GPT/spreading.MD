@@ -1,7 +1,5 @@
 ### What **Spreading** means in COT
 
-**Spreading = traders holding both long *and* short positions in the same market**, usually to profit from **price differences**, not outright direction.
-
 > **Spreading = long and short positions held by the same trader**
 
 So they’re **not bullish or bearish** — they’re neutral on direction.
@@ -23,7 +21,7 @@ In COT reports, a **spreading position is reported separately** from outright lo
 * It’s usually done by **professionals**
 * It tells you about **structure**, not sentiment
 
-### How to interpret it
+### **How to interpret it**
 
 * **High spreading** → lots of relative-value / hedging activity
 * **Rising spreading** → market structure changing (seasonality, storage, roll pressure)
@@ -41,15 +39,11 @@ In COT reports, a **spreading position is reported separately** from outright lo
 * **Managed Money / Leveraged Funds** doing relative-value trades
 * Large institutions rolling positions
 
+---
+
 If you want, I can show you **how to adjust net positions when spreading explodes** or **when spreading signals a coming volatility shift** — just tell me what you’re trading.
 
-> - - 
-
-Perfect 👍 let’s make it **practical**.
-
-Below is **how to use spreading + Managed Money / Leveraged Funds to spot reversals and trend strength**.
-
----
+> Below is **how to use spreading + Managed Money / Leveraged Funds to spot reversals and trend strength**.
 
 ## 1️⃣ Ignore spreading for direction — but watch it for **timing**
 
