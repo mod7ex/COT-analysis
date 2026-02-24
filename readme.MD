@@ -1,5 +1,7 @@
 ## COT data analysis
 
+> [contract expiration dates](https://www.barchart.com/futures/futures-expirations/currencies)
+
 ### COT report types: 
 | report        | 'cot_report_type'|
 | ------------- |-------------| 
