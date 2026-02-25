@@ -144,9 +144,11 @@ def plot_df_chart(
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def get_market_df(cot_report_type=TRADERS_IN_FINANCIAL_FUTURES_FUT, market=PICKED_MARKET):
+def get_market_df(cot_report_type=TRADERS_IN_FINANCIAL_FUTURES_FUT, market=PICKED_MARKET, last_year=False, verbose=True):
 
-    df = normalize_cols(cot_all(cot_report_type=cot_report_type, verbose=True, _use_cache=True, _store=True))
+    cot_load = cot_year if last_year else cot_all
+
+    df = normalize_cols(cot_load(cot_report_type=cot_report_type, verbose=verbose, _use_cache=True, _store=True))
 
     with open(json_markets_path(cot_report_type), "r") as f:
         _markets = json.load(f)
